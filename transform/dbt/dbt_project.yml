@@ -1,0 +1,12 @@
+name: tft_analyst
+version: '1.0.0'
+config-version: 2
+profile: tft_analyst
+model-paths: [models]
+
+models:
+  tft_analyst:
+    staging:
+      +materialized: table
+    marts:
+      +materialized: table

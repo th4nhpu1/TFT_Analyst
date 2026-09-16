@@ -1,12 +1,4 @@
 services:
-  server:
-    build: ./extract
-    ports:
-      - "8501:8501"
-    depends_on:
-      db:
-        condition: service_healthy
-
   db:
     image: postgres:15
     container_name: Tft_db
@@ -14,7 +6,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./data:/var/lib/postgresql/data # Map your local folder here
+      - ./data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -25,6 +17,54 @@ services:
       timeout: 5s
       retries: 5
 
+  dbt:
+    image: tft-analyst-pipeline:local
+    build: ./airflow
+    entrypoint: ["/opt/dbt-venv/bin/dbt"]
+    command: ["run", "--project-dir", "/app", "--profiles-dir", "/app"]
+    working_dir: /app
+    volumes:
+      - ./transform/dbt:/app
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  server:
+    image: tft-analyst-app:local
+    build: ./extract
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./extract:/app
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      dbt:
+        condition: service_completed_successfully
+
+  ingest:
+    profiles: [manual]
+    image: tft-analyst-app:local
+    build: ./extract
+    command: ["python", "loadData.py", "--db-host", "db"]
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      RIOT_API_KEY: ${RIOT_API_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -34,6 +74,33 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "8080:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  airflow:
+    profiles: [scheduler]
+    image: tft-analyst-pipeline:local
+    build: ./airflow
+    command: standalone
+    ports:
+      - "8081:8080"
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "False"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/state/airflow.db
+      POSTGRES_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      RIOT_API_KEY: ${RIOT_API_KEY}
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags:ro
+      - ./airflow/state:/opt/airflow/state
+      - ./airflow/logs:/opt/airflow/logs
+      - ./extract:/opt/airflow/project/extract:ro
+      - ./transform/dbt:/opt/airflow/project/dbt
     depends_on:
       db:
         condition: service_healthy

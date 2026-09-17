@@ -23,7 +23,7 @@ with DAG(
     )
     ingest = BashOperator(
         task_id="ingest_matches",
-        bash_command="python /opt/airflow/project/extract/loadData.py --max-matches 200 --days 7 --db-host db",
+        bash_command="python /opt/airflow/project/extract/loadData.py --players-per-rank 50 --matches-per-player 20 --days 7 --db-host db",
     )
     ratings = BashOperator(
         task_id="build_ratings",

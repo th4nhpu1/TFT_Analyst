@@ -1,6 +1,6 @@
-"""Fetch recent VN2 Challenger TFT matches into PostgreSQL.
+"""Fetch recent VN2 Gold-to-Challenger TFT matches into PostgreSQL.
 
-Usage: python extract/loadData.py --max-matches 200
+Usage: python extract/loadData.py --players-per-rank 50 --matches-per-player 20
 Credentials are read from environment variables, .env, or ../secret/.env.
 """
 
@@ -63,10 +63,12 @@ class RiotClient:
                     time.sleep(delay)
                     continue
                 raise RuntimeError(f"Riot API returned {error.code} for {url.split('?')[0]}") from error
-            except URLError as error:
+            except (URLError, TimeoutError, ConnectionError) as error:
                 if attempt == 5:
-                    raise RuntimeError(f"Network error: {error.reason}") from error
-                time.sleep(min(2 ** attempt * 5, 60))
+                    raise RuntimeError(f"Network error: {getattr(error, 'reason', str(error))}") from error
+                delay = min(2 ** attempt * 5, 60)
+                print(f"Riot network request interrupted; retrying in {delay}s", flush=True)
+                time.sleep(delay)
         raise RuntimeError("Riot API did not recover after retries")
 
 
@@ -107,65 +109,83 @@ def insert_match(db, match_id, match):
 
 
 def main():
+    import random
+    from rankSampling import TIERS, open_run, sample_players, save_run
+
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--max-matches", type=int, default=1000)
-    parser.add_argument("--players", type=int, default=100)
+    parser.add_argument("--max-matches", type=int, default=None, help="Optional cap for a short run; omitted by default")
+    parser.add_argument("--players-per-rank", "--players", dest="players", type=int, default=50)
     parser.add_argument("--matches-per-player", type=int, default=20)
     parser.add_argument("--days", type=int, default=7)
+    parser.add_argument("--new-sample", action="store_true", help="Start a fresh sample instead of resuming an unfinished run")
     parser.add_argument("--db-host", default=os.getenv("POSTGRES_HOST", "localhost"))
     args = parser.parse_args()
-    if min(args.max_matches, args.players, args.matches_per_player, args.days) < 1:
+    if min(args.players, args.matches_per_player, args.days) < 1 or (args.max_matches is not None and args.max_matches < 1):
         parser.error("all numeric options must be positive")
-
+    if args.matches_per_player > 100:
+        parser.error("--matches-per-player cannot exceed 100")
     key = config_value("RIOT_API_KEY")
     if not key:
         raise RuntimeError("Set RIOT_API_KEY or add it to .env / ../secret/.env")
     client = RiotClient(key)
-    cutoff = datetime.now(timezone.utc) - timedelta(days=args.days)
-    cutoff_ms = int(cutoff.timestamp() * 1000)
-    challenger = client.get("https://vn2.api.riotgames.com/tft/league/v1/challenger")
-    entries = sorted(challenger.get("entries", []), key=lambda entry: entry.get("leaguePoints", 0), reverse=True)
-    players = [entry["puuid"] for entry in entries if entry.get("puuid")][:args.players]
-    if not players:
-        raise RuntimeError("Challenger endpoint returned no player PUUIDs")
-    print(f"Checking {len(players)} Challenger players for matches since {cutoff.date()} UTC", flush=True)
-
-    lists = []
-    for number, puuid in enumerate(players, 1):
-        url = (f"https://sea.api.riotgames.com/tft/match/v1/matches/by-puuid/"
-               f"{quote(puuid, safe='')}/ids?{urlencode({'count': args.matches_per_player})}")
-        lists.append(client.get(url))
-        if number % 10 == 0:
-            print(f"Checked match lists for {number}/{len(players)} players", flush=True)
-
     db = connect_db(args.db_host)
+    run_id = state = None
     try:
+        config = dict(players_per_rank=args.players, matches_per_player=args.matches_per_player, days=args.days, tiers=list(TIERS))
+        run_id, state = open_run(db, config, args.new_sample)
+        save_run(db, run_id, state)
+        print(f"Collection {run_id}: {args.players} random players per rank, {args.matches_per_player} recent matches each", flush=True)
+        for index, tier in enumerate(TIERS):
+            selected = [p for p in state['players'] if p['tier'] == tier]
+            if not selected:
+                print(f"Sampling {tier} across its ladder...", flush=True)
+                selected = sample_players(client, tier, args.players, random.Random(state['seed'] + index))
+                state['players'].extend(selected)
+                save_run(db, run_id, state)
+            print(f"{tier}: {len(selected)} players selected", flush=True)
+
+        for number, player in enumerate(state['players'], 1):
+            if player['match_ids'] is None:
+                url = (f"https://sea.api.riotgames.com/tft/match/v1/matches/by-puuid/"
+                       f"{quote(player['puuid'], safe='')}/ids?{urlencode({'count': args.matches_per_player})}")
+                player['match_ids'] = client.get(url)
+                save_run(db, run_id, state)
+            if number % 25 == 0:
+                print(f"Loaded histories for {number}/{len(state['players'])} players", flush=True)
+
+        cutoff_ms = int((datetime.now(timezone.utc) - timedelta(days=args.days)).timestamp() * 1000)
         known = existing_ids(db)
+        seen = set(state['processed'])
         fetched = 0
-        checked = 0
-        seen = set(known)
+        lists = [p['match_ids'] for p in state['players']]
+        state['unique_references'] = len({m for ids in lists for m in ids})
         for group in zip_longest(*lists):
             for match_id in group:
                 if match_id is None or match_id in seen:
                     continue
+                if match_id not in known:
+                    match = client.get(f"https://sea.api.riotgames.com/tft/match/v1/matches/{quote(match_id, safe='')}")
+                    info = match.get('info', {})
+                    if int(info.get('queue_id', info.get('queueId', 0))) == 1100 and int(info.get('game_datetime', 0)) >= cutoff_ms:
+                        insert_match(db, match_id, match)
+                        state['saved'] += 1
+                        fetched += 1
                 seen.add(match_id)
-                url = f"https://sea.api.riotgames.com/tft/match/v1/matches/{quote(match_id, safe='')}"
-                match = client.get(url)
-                checked += 1
-                info = match.get("info", {})
-                # Ranked TFT only; other queues and older sets would skew rankings.
-                if int(info.get("queue_id", info.get("queueId", 0))) != 1100:
-                    continue
-                if int(info.get("game_datetime", 0)) < cutoff_ms:
-                    continue
-                insert_match(db, match_id, match)
-                fetched += 1
-                if fetched % 25 == 0:
-                    print(f"Saved {fetched} ranked matches ({checked} unique matches checked)", flush=True)
-                if fetched >= args.max_matches:
-                    print(f"Done: saved {fetched} new matches to PostgreSQL", flush=True)
+                state['processed'].append(match_id)
+                if len(seen) % 25 == 0:
+                    save_run(db, run_id, state)
+                    print(f"Processed {len(seen)}/{state['unique_references']} unique references; saved {state['saved']} new ranked matches", flush=True)
+                if args.max_matches is not None and fetched >= args.max_matches:
+                    save_run(db, run_id, state, 'paused')
+                    print(f"Paused after saving {fetched} matches; next run resumes this sample", flush=True)
                     return
-        print(f"Done: saved {fetched} new matches to PostgreSQL; no more match IDs available", flush=True)
+        save_run(db, run_id, state, 'complete')
+        print(f"Complete: {len(state['players'])} sampled players, {state['unique_references']} unique references, {state['saved']} new ranked matches", flush=True)
+    except Exception:
+        if run_id is not None:
+            db.rollback()
+            save_run(db, run_id, state, 'failed')
+        raise
     finally:
         db.close()
 

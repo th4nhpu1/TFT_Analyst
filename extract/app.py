@@ -1,5 +1,6 @@
 """TFT Analyst: Ranked Challenger analytics and meta statistics."""
 
+import json
 import os
 import re
 
@@ -65,25 +66,6 @@ SPECIAL_ITEMS = {
     "aegisofdusk": "Aegis of Dusk",
     "talismanofascension": "Talisman of Ascension",
 }
-
-
-def connection():
-    return psycopg2.connect(
-        host=os.getenv("POSTGRES_HOST", "localhost"),
-        port=5432,
-        dbname=os.environ.get("POSTGRES_DB", "tft_data"),
-        user=os.environ.get("POSTGRES_USER", "admin"),
-        password=os.environ.get("POSTGRES_PASSWORD", "muasaulamuacuachungta"),
-    )
-
-
-@st.cache_data(ttl=300)
-def query(sql, params=()):
-    with connection() as db:
-        with db.cursor() as cursor:
-            cursor.execute(sql, params)
-            columns = [item.name for item in cursor.description]
-            return pd.DataFrame(cursor.fetchall(), columns=columns)
 
 
 def clean_unit_name(identifier: str) -> str:
@@ -160,6 +142,199 @@ def clean_comp_units(comp_string: str) -> str:
         return ""
     units = [clean_unit_name(u.strip()) for u in comp_string.split("+") if u.strip()]
     return " + ".join(units)
+
+
+def normalize_champion_key(key: str) -> str:
+    if not key or not isinstance(key, str):
+        return ""
+    k = re.sub(r"^(DA_|TFT\d+_)", "", key, flags=re.IGNORECASE)
+    k = re.sub(r"^\d+_", "", k)
+    k = re.sub(r"(_Base|_AD|_AP|Small|_18|18)$", "", k, flags=re.IGNORECASE)
+    k = re.sub(r"(_?\d+)$", "", k)
+    k = re.sub(r"(_Base|_AD|_AP|Small)$", "", k, flags=re.IGNORECASE)
+    return k.replace("_", "").replace(" ", "").replace("'", "").lower()
+
+
+def normalize_item_key(key: str) -> str:
+    if not key or not isinstance(key, str):
+        return ""
+    k = re.sub(r"^(DA_|TFT\d+_)", "", key, flags=re.IGNORECASE)
+    k = re.sub(r"^\d+_", "", k)
+    k = re.sub(r"^(Item_)?Artifact_", "", k, flags=re.IGNORECASE)
+    k = re.sub(r"^Component_", "", k, flags=re.IGNORECASE)
+    k = re.sub(r"(_?Radiant)$", "", k, flags=re.IGNORECASE)
+    k = re.sub(r"(\d+)$", "", k)
+    return k.replace("_", "").replace(" ", "").replace("'", "").lower()
+
+
+def load_assets():
+    assets_path = os.path.join(os.path.dirname(__file__), "tft_assets.json")
+    data = {"champions": {}, "items": {}}
+    if os.path.exists(assets_path):
+        try:
+            with open(assets_path, encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception:
+            pass
+
+    champ_index = {}
+    for raw_id, c_data in data.get("champions", {}).items():
+        champ_index[raw_id] = c_data
+        champ_index[raw_id.lower()] = c_data
+        clean = clean_unit_name(raw_id)
+        if clean:
+            champ_index[clean] = c_data
+            champ_index[clean.lower()] = c_data
+        norm = normalize_champion_key(raw_id)
+        if norm and norm not in champ_index:
+            champ_index[norm] = c_data
+        clean_norm = normalize_champion_key(clean)
+        if clean_norm and clean_norm not in champ_index:
+            champ_index[clean_norm] = c_data
+
+    item_index = {}
+    for raw_id, i_data in data.get("items", {}).items():
+        item_index[raw_id] = i_data
+        item_index[raw_id.lower()] = i_data
+        clean = clean_item_name(raw_id)
+        if clean:
+            item_index[clean] = i_data
+            item_index[clean.lower()] = i_data
+        norm = normalize_item_key(raw_id)
+        if norm and norm not in item_index:
+            item_index[norm] = i_data
+
+    data["champ_index"] = champ_index
+    data["item_index"] = item_index
+    return data
+
+
+TFT_ASSETS = load_assets()
+
+COST_COLORS = {
+    1: "#94A3B8",  # Slate 400
+    2: "#10B981",  # Emerald 500
+    3: "#3B82F6",  # Blue 500
+    4: "#A855F7",  # Purple 500
+    5: "#F59E0B",  # Gold 500
+}
+
+
+def get_unit_data(unit_id: str) -> dict:
+    if not unit_id or not isinstance(unit_id, str):
+        return {}
+    idx = TFT_ASSETS.get("champ_index", {})
+    if unit_id in idx:
+        return idx[unit_id]
+    u_lower = unit_id.lower()
+    if u_lower in idx:
+        return idx[u_lower]
+    clean = clean_unit_name(unit_id)
+    if clean in idx:
+        return idx[clean]
+    if clean.lower() in idx:
+        return idx[clean.lower()]
+    norm = normalize_champion_key(unit_id)
+    if norm in idx:
+        return idx[norm]
+    norm_clean = normalize_champion_key(clean)
+    if norm_clean in idx:
+        return idx[norm_clean]
+    return {}
+
+
+def get_unit_icon(unit_id: str) -> str:
+    ch = get_unit_data(unit_id)
+    if ch.get("icon_url"):
+        return ch["icon_url"]
+    clean = clean_unit_name(unit_id).replace(" ", "").replace("'", "")
+    return f"https://ddragon.leagueoflegends.com/cdn/14.20.1/img/champion/{clean}.png"
+
+
+def get_unit_cost(unit_id: str) -> int:
+    ch = get_unit_data(unit_id)
+    return ch.get("cost", 1)
+
+
+def get_item_data(item_id: str) -> dict:
+    if not item_id or not isinstance(item_id, str):
+        return {}
+    idx = TFT_ASSETS.get("item_index", {})
+    if item_id in idx:
+        return idx[item_id]
+    i_lower = item_id.lower()
+    if i_lower in idx:
+        return idx[i_lower]
+    clean = clean_item_name(item_id)
+    if clean in idx:
+        return idx[clean]
+    if clean.lower() in idx:
+        return idx[clean.lower()]
+    norm = normalize_item_key(item_id)
+    if norm in idx:
+        return idx[norm]
+    return {}
+
+
+def get_item_icon(item_id: str) -> str:
+    it = get_item_data(item_id)
+    return it.get("icon_url", "")
+
+
+def render_unit_avatar(unit_id: str, size: int = 36, show_name: bool = False, show_cost: bool = False) -> str:
+    icon_url = get_unit_icon(unit_id)
+    cost = get_unit_cost(unit_id)
+    border_color = COST_COLORS.get(cost, "#94A3B8")
+    name = clean_unit_name(unit_id)
+
+    html = f'<div style="display: inline-flex; flex-direction: column; align-items: center; margin: 2px; position: relative;">'
+    html += f'<div style="width: {size}px; height: {size}px; border-radius: 7px; border: 2px solid {border_color}; overflow: hidden; background: #0F172A; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">'
+    html += f'<img src="{icon_url}" alt="{name}" title="{name} ({cost}-cost)" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display=\'none\'"/>'
+    html += "</div>"
+    if show_cost:
+        html += f'<span style="position: absolute; top: -3px; right: -3px; background: {border_color}; color: #0B0F19; font-size: 0.6rem; font-weight: 700; border-radius: 3px; padding: 0 3px; line-height: 12px;">{cost}</span>'
+    if show_name:
+        html += f'<span style="font-size: 0.7rem; color: #CBD5E1; margin-top: 3px; max-width: {size+12}px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;">{name}</span>'
+    html += "</div>"
+    return html
+
+
+def render_item_icon(item_id: str, size: int = 32, show_name: bool = False) -> str:
+    icon_url = get_item_icon(item_id)
+    name = clean_item_name(item_id)
+
+    html = f'<div style="display: inline-flex; flex-direction: column; align-items: center; margin: 2px;">'
+    html += f'<div style="width: {size}px; height: {size}px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); overflow: hidden; background: #1E293B; box-shadow: 0 2px 5px rgba(0,0,0,0.25);">'
+    html += f'<img src="{icon_url}" alt="{name}" title="{name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display=\'none\'"/>'
+    html += "</div>"
+    if show_name:
+        html += f'<span style="font-size: 0.7rem; color: #CBD5E1; margin-top: 2px; max-width: {size+12}px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;">{name}</span>'
+    html += "</div>"
+    return html
+
+
+def render_board_lineup(units_list, avatar_size: int = 32, show_names: bool = False) -> str:
+    chips = [render_unit_avatar(u, size=avatar_size, show_name=show_names, show_cost=False) for u in units_list if u]
+    return f'<div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">{"".join(chips)}</div>'
+
+
+def connection():
+    return psycopg2.connect(
+        host=os.getenv("POSTGRES_HOST", "localhost"),
+        port=5432,
+        dbname=os.environ.get("POSTGRES_DB", "tft_data"),
+        user=os.environ.get("POSTGRES_USER", "admin"),
+        password=os.environ.get("POSTGRES_PASSWORD", "muasaulamuacuachungta"),
+    )
+
+
+@st.cache_data(ttl=300)
+def query(sql, params=()):
+    with connection() as db:
+        with db.cursor() as cursor:
+            cursor.execute(sql, params)
+            columns = [item.name for item in cursor.description]
+            return pd.DataFrame(cursor.fetchall(), columns=columns)
 
 
 CUSTOM_CSS = """
@@ -359,8 +534,145 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Ingestion Run Progress Check
+try:
+    with connection() as progress_db:
+        with progress_db.cursor() as progress_cursor:
+            progress_cursor.execute("""
+                SELECT status, jsonb_array_length(state -> 'players'),
+                    (SELECT count(*) FROM jsonb_array_elements(state -> 'players') p
+                     WHERE p -> 'match_ids' <> 'null'::jsonb),
+                    jsonb_array_length(state -> 'processed'),
+                    coalesce((state ->> 'unique_references')::integer, 0),
+                    coalesce((state ->> 'saved')::integer, 0)
+                FROM ingestion_runs ORDER BY started_at DESC LIMIT 1
+            """)
+            collection = progress_cursor.fetchone()
+except (psycopg2.Error, KeyError):
+    collection = None
+
+if collection:
+    status, sampled, histories, processed, references, saved = collection
+    with st.expander(f"Latest data collection: {status}"):
+        st.write(f"Players selected: {sampled}/350 · Histories loaded: {histories}/{sampled}")
+        st.write(f"Unique matches checked: {processed}/{references or 'pending'} · New matches saved: {saved}")
+        st.caption("50 players per rank, Gold through Challenger. Ratings rebuild when collection finishes.")
+        st.button("Refresh collection status")
+
+
+def rating_rows(data, label_column, id_column, section):
+    """Clickable, paginated rankings with MetaTFT-inspired icons and details action."""
+    if data.empty:
+        st.info("No results match these filters.")
+        return None
+    pages = (len(data) + 9) // 10
+    page = st.selectbox(f"{section} page", list(range(1, pages + 1)), key=f"{section}_page")
+    st.caption(f"{len(data)} results · Click an entry name or Details to explore pairing synergies.")
+
+    if section == "Comps":
+        header = st.columns([1.9, 2.3, 1.2, 0.9, 0.8, 0.9])
+        for column, text in zip(header, ["Composition", "Board Lineup", "Games (Play %)", "Avg place", "Top 4", "Details"]):
+            column.markdown(f"**{text}**")
+        for _, row in data.iloc[(page - 1) * 10:page * 10].iterrows():
+            ident = str(row[id_column])
+            cols = st.columns([1.9, 2.3, 1.2, 0.9, 0.8, 0.9])
+            name_clicked = cols[0].button(str(row[label_column]), key=f"{section}_name_{ident}", use_container_width=True)
+            board_units = row.get("most_common_board") or []
+            cols[1].markdown(render_board_lineup(board_units, avatar_size=28, show_names=False), unsafe_allow_html=True)
+            p_rate = (int(row['sample_count']) / max(1, matches_cnt)) * 100
+            cols[2].markdown(f"<b>{int(row['sample_count']):,}</b> <span style='color: #0AC8B9; font-size: 0.8rem; font-weight: 600;'>({p_rate:.1f}%)</span>", unsafe_allow_html=True)
+            avg_p = float(row['average_placement'])
+            p_color = "#10B981" if avg_p < 4.0 else "#F8FAFC"
+            cols[3].markdown(f'<span style="color: {p_color}; font-weight: 600;">{avg_p:.2f}</span>', unsafe_allow_html=True)
+            cols[4].write(f"{float(row['top4_rate_pct']):.1f}%")
+            more_clicked = cols[5].button("Details", key=f"{section}_more_{ident}")
+            if name_clicked or more_clicked:
+                st.session_state[f"{section}_selected"] = ident
+            if show_raw_ids:
+                cols[0].caption(ident)
+    else:
+        header = st.columns([0.6, 2.6, 1, 1, 1, 1])
+        for column, text in zip(header, ["", section, "Appearances", "Avg place", "Top 4", "Details"]):
+            column.markdown(f"**{text}**")
+        for _, row in data.iloc[(page - 1) * 10:page * 10].iterrows():
+            ident = str(row[id_column])
+            cols = st.columns([0.6, 2.6, 1, 1, 1, 1])
+            if section == "Champions":
+                cols[0].markdown(render_unit_avatar(ident, size=36, show_cost=True), unsafe_allow_html=True)
+                cost = get_unit_cost(ident)
+                btn_label = f"{row[label_column]} ({cost}g)"
+            else:
+                cols[0].markdown(render_item_icon(ident, size=34), unsafe_allow_html=True)
+                btn_label = str(row[label_column])
+
+            name_clicked = cols[1].button(btn_label, key=f"{section}_name_{ident}", use_container_width=True)
+            cols[2].write(f"{int(row['sample_count']):,}")
+            avg_p = float(row['average_placement'])
+            p_color = "#10B981" if avg_p < 4.0 else "#F8FAFC"
+            cols[3].markdown(f'<span style="color: {p_color}; font-weight: 600;">{avg_p:.2f}</span>', unsafe_allow_html=True)
+            cols[4].write(f"{float(row['top4_rate_pct']):.1f}%")
+            more_clicked = cols[5].button("Details", key=f"{section}_more_{ident}")
+            if name_clicked or more_clicked:
+                st.session_state[f"{section}_selected"] = ident
+            if show_raw_ids:
+                cols[1].caption(ident)
+
+    selected_id = st.session_state.get(f"{section}_selected")
+    selected = data.loc[data[id_column].astype(str) == selected_id]
+    if selected.empty:
+        return None
+    st.divider()
+    if st.button("Close details", key=f"{section}_close"):
+        st.session_state.pop(f"{section}_selected", None)
+        return None
+    return selected.iloc[0]
+
+
+def pair_details(selected_id, kind):
+    selected_column, result_column = ('unit_id', 'item_id') if kind == 'champion' else ('item_id', 'unit_id')
+    pairs = query(f"""
+        SELECT {result_column}, match_count, sample_count, average_placement, top4_rate_pct
+        FROM analytics.mart_unit_item_ratings
+        WHERE set_number = %s AND {selected_column} = %s AND match_count >= 10
+        ORDER BY average_placement ASC, match_count DESC, {result_column}
+    """, (set_number, selected_id))
+    st.caption("At least 10 distinct matches per pairing. Only items equipped on that champion count. Lower average placement is better.")
+    if pairs.empty:
+        st.info("No pairings have reached 10 matches yet.")
+        return
+
+    label = 'Item' if kind == 'champion' else 'Champion'
+    cleaner = clean_item_name if kind == 'champion' else clean_unit_name
+    icon_getter = get_item_icon if kind == 'champion' else get_unit_icon
+
+    pairs[label] = pairs[result_column].map(cleaner)
+    pairs['Icon'] = pairs[result_column].map(icon_getter)
+    pairs['average_placement'] = pairs['average_placement'].astype(float)
+    pairs['top4_rate_pct'] = pairs['top4_rate_pct'].astype(float)
+
+    st.dataframe(
+        pairs[['Icon', label, 'match_count', 'sample_count', 'average_placement', 'top4_rate_pct']].rename(columns={
+            'match_count': 'Matches',
+            'sample_count': 'Player results',
+            'average_placement': 'Avg Placement',
+            'top4_rate_pct': 'Top 4 %',
+        }),
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "Icon": st.column_config.ImageColumn("", width="small"),
+            label: st.column_config.TextColumn(label, width="medium"),
+            "Matches": st.column_config.NumberColumn("Matches", format="%d", width="small"),
+            "Player results": st.column_config.NumberColumn("Player Results", format="%d", width="small"),
+            "Avg Placement": st.column_config.NumberColumn("Avg Placement", format="%.2f", help="Lower is better", width="small"),
+            "Top 4 %": st.column_config.ProgressColumn("Top 4 Rate", format="%.1f%%", min_value=0, max_value=100, width="medium"),
+        }
+    )
+
+
 units_tab, items_tab, comps_tab = st.tabs(["Champions", "Items", "Team Compositions"])
 
+# --- Champions Tab ---
 with units_tab:
     units = query(
         """
@@ -379,6 +691,39 @@ with units_tab:
         units["average_placement"] = units["average_placement"].astype(float)
         units["top4_rate_pct"] = units["top4_rate_pct"].astype(float)
 
+        # Meta Top 3 Highlights Spotlight
+        top_3 = units.head(3)
+        spot_cols = st.columns(3)
+        for idx, (_, ch_row) in enumerate(top_3.iterrows()):
+            with spot_cols[idx]:
+                uid = ch_row["unit_id"]
+                c_name = ch_row["Unit"]
+                c_cost = get_unit_cost(uid)
+                b_color = COST_COLORS.get(c_cost, "#94A3B8")
+                c_icon = get_unit_icon(uid)
+                c_avg = ch_row["average_placement"]
+                c_top4 = ch_row["top4_rate_pct"]
+                st.markdown(
+                    f"""
+                    <div style="background: #131B2E; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        <div style="width: 46px; height: 46px; border-radius: 8px; border: 2.5px solid {b_color}; overflow: hidden; flex-shrink: 0; background: #0F172A;">
+                            <img src="{c_icon}" style="width: 100%; height: 100%; object-fit: cover;"/>
+                        </div>
+                        <div style="flex-grow: 1;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span style="font-weight: 700; font-size: 0.95rem; color: #F8FAFC;">{c_name}</span>
+                                <span style="font-size: 0.68rem; font-weight: 700; background: {b_color}; color: #0B0F19; border-radius: 3px; padding: 1px 4px;">{c_cost}g</span>
+                            </div>
+                            <div style="font-size: 0.78rem; color: #94A3B8; margin-top: 2px;">
+                                Avg: <span style="color: #10B981; font-weight: 600;">{c_avg:.2f}</span> &bull; Top 4: <span style="color: #0AC8B9; font-weight: 600;">{c_top4:.1f}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+        st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
+
         col_search, col_stats = st.columns([2, 1])
         with col_search:
             unit_search = st.text_input("Search Champion", "", placeholder="Type champion name (e.g. Lux, Ahri)...")
@@ -390,43 +735,27 @@ with units_tab:
         filtered_units = units
         if unit_search.strip():
             filtered_units = filtered_units[
-                filtered_units["Unit"].str.contains(unit_search.strip(), case=False, na=False)
+                filtered_units["Unit"].str.contains(unit_search.strip(), case=False, na=False, regex=False)
             ]
 
-        display_cols = ["Unit", "sample_count", "average_placement", "top4_rate_pct"]
-        col_rename = {
-            "sample_count": "Appearances",
-            "average_placement": "Avg Placement",
-            "top4_rate_pct": "Top 4 %",
-        }
-        if show_raw_ids:
-            display_cols.append("unit_id")
-            col_rename["unit_id"] = "Raw Game ID"
+        selected_unit = rating_rows(filtered_units, "Unit", "unit_id", "Champions")
+        if selected_unit is not None:
+            c_cost = get_unit_cost(selected_unit['unit_id'])
+            b_color = COST_COLORS.get(c_cost, "#94A3B8")
+            st.markdown(
+                f"""
+                <div style="display: flex; align-items: center; gap: 12px; margin: 12px 0;">
+                    <div style="width: 44px; height: 44px; border-radius: 8px; border: 2.5px solid {b_color}; overflow: hidden; background: #0F172A;">
+                        <img src="{get_unit_icon(selected_unit['unit_id'])}" style="width: 100%; height: 100%; object-fit: cover;"/>
+                    </div>
+                    <h3 style="margin: 0; color: #F8FAFC;">Best items for {selected_unit['Unit']}</h3>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            pair_details(selected_unit['unit_id'], 'champion')
 
-        st.dataframe(
-            filtered_units[display_cols].rename(columns=col_rename),
-            use_container_width=True,
-            hide_index=True,
-            column_config={
-                "Unit": st.column_config.TextColumn("Champion", width="medium"),
-                "Appearances": st.column_config.NumberColumn("Appearances", format="%d", width="small"),
-                "Avg Placement": st.column_config.NumberColumn(
-                    "Avg Placement",
-                    help="Lower is better (1.0 = 1st place)",
-                    format="%.2f",
-                    width="small",
-                ),
-                "Top 4 %": st.column_config.ProgressColumn(
-                    "Top 4 Rate",
-                    help="Percentage of games finishing in top 4",
-                    format="%.1f%%",
-                    min_value=0,
-                    max_value=100,
-                    width="medium",
-                ),
-            },
-        )
-
+# --- Items Tab ---
 with items_tab:
     items = query(
         """
@@ -444,6 +773,34 @@ with items_tab:
         items["Item"] = items["item_id"].map(clean_item_name)
         items["average_placement"] = items["average_placement"].astype(float)
         items["top4_rate_pct"] = items["top4_rate_pct"].astype(float)
+
+        # Meta Top 3 Items Spotlight
+        top_3_items = items.head(3)
+        spot_i_cols = st.columns(3)
+        for idx, (_, it_row) in enumerate(top_3_items.iterrows()):
+            with spot_i_cols[idx]:
+                iid = it_row["item_id"]
+                i_name = it_row["Item"]
+                i_icon = get_item_icon(iid)
+                i_avg = it_row["average_placement"]
+                i_top4 = it_row["top4_rate_pct"]
+                st.markdown(
+                    f"""
+                    <div style="background: #131B2E; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        <div style="width: 42px; height: 42px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); overflow: hidden; flex-shrink: 0; background: #1E293B;">
+                            <img src="{i_icon}" style="width: 100%; height: 100%; object-fit: cover;"/>
+                        </div>
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: 700; font-size: 0.95rem; color: #F8FAFC; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px;">{i_name}</div>
+                            <div style="font-size: 0.78rem; color: #94A3B8; margin-top: 2px;">
+                                Avg: <span style="color: #10B981; font-weight: 600;">{i_avg:.2f}</span> &bull; Top 4: <span style="color: #0AC8B9; font-weight: 600;">{i_top4:.1f}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+        st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
 
         col_cat, col_search_item = st.columns([1, 2])
         with col_cat:
@@ -474,65 +831,52 @@ with items_tab:
 
         if item_search.strip():
             filtered_items = filtered_items[
-                filtered_items["Item"].str.contains(item_search.strip(), case=False, na=False)
+                filtered_items["Item"].str.contains(item_search.strip(), case=False, na=False, regex=False)
             ]
 
-        display_cols = ["Item", "sample_count", "average_placement", "top4_rate_pct"]
-        col_rename = {
-            "sample_count": "Appearances",
-            "average_placement": "Avg Placement",
-            "top4_rate_pct": "Top 4 %",
-        }
-        if show_raw_ids:
-            display_cols.append("item_id")
-            col_rename["item_id"] = "Raw Game ID"
+        selected_item = rating_rows(filtered_items, "Item", "item_id", "Items")
+        if selected_item is not None:
+            st.markdown(
+                f"""
+                <div style="display: flex; align-items: center; gap: 12px; margin: 12px 0;">
+                    <div style="width: 40px; height: 40px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); overflow: hidden; background: #1E293B;">
+                        <img src="{get_item_icon(selected_item['item_id'])}" style="width: 100%; height: 100%; object-fit: cover;"/>
+                    </div>
+                    <h3 style="margin: 0; color: #F8FAFC;">Best champions with {selected_item['Item']}</h3>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            pair_details(selected_item['item_id'], 'item')
 
-        st.dataframe(
-            filtered_items[display_cols].rename(columns=col_rename),
-            use_container_width=True,
-            hide_index=True,
-            column_config={
-                "Item": st.column_config.TextColumn("Item Name", width="medium"),
-                "Appearances": st.column_config.NumberColumn("Appearances", format="%d", width="small"),
-                "Avg Placement": st.column_config.NumberColumn(
-                    "Avg Placement",
-                    help="Lower is better",
-                    format="%.2f",
-                    width="small",
-                ),
-                "Top 4 %": st.column_config.ProgressColumn(
-                    "Top 4 Rate",
-                    help="Percentage of games finishing in top 4",
-                    format="%.1f%%",
-                    min_value=0,
-                    max_value=100,
-                    width="medium",
-                ),
-            },
-        )
-
+# --- Compositions Tab ---
 with comps_tab:
-    st.caption("Exact final-board compositions. Minor unit changes create separate compositions.")
+    min_1pct_matches = max(1, int(round(matches_cnt * 0.01)))
+    st.caption(
+        f"Meta compositions appearing in at least 1% of total matches (>= {min_1pct_matches} of {matches_cnt:,} games). "
+        "Grouped by key carry champions and primary traits. Lower average placement is better."
+    )
 
-    col_comp_samples, col_comp_search = st.columns([1, 2])
+    col_comp_samples, col_comp_search = st.columns([1.2, 2])
     with col_comp_samples:
         comp_min_samples = st.number_input(
-            "Min Comp Appearances",
-            min_value=1,
-            value=3,
+            f"Min Appearances (>= 1% = {min_1pct_matches} games)",
+            min_value=min_1pct_matches,
+            value=min_1pct_matches,
             step=1,
-            help="Minimum times this exact unit lineup appeared in ranked matches.",
+            help=f"Limited to compositions appearing in at least 1% of total recorded matches ({min_1pct_matches} of {matches_cnt:,} games).",
         )
     with col_comp_search:
         comp_search = st.text_input(
-            "Filter by Champion in Comp",
+            "Search Comp",
             "",
-            placeholder="Type champion name (e.g. Lux, Ashe) to see boards running them...",
+            placeholder="Search carries, trait, flex, or reroll...",
         )
 
     comps = query(
         """
-        SELECT comp_units, sample_count, average_placement, top4_rate_pct
+        SELECT comp_id, comp_name, sample_count, average_placement, top4_rate_pct,
+               most_common_board, board_sample_count, board_share_pct, example_board
         FROM analytics.mart_comp_ratings
         WHERE set_number = %s AND sample_count >= %s
         ORDER BY average_placement ASC, sample_count DESC
@@ -541,55 +885,89 @@ with comps_tab:
     )
 
     if comps.empty:
-        st.info("No exact compositions meet this sample threshold. Lower it to discover recurring team boards.")
+        st.info("No comps meet this sample threshold. Lower it to see more comps.")
     else:
-        comps["Clean Board"] = comps["comp_units"].map(clean_comp_units)
         comps["average_placement"] = comps["average_placement"].astype(float)
         comps["top4_rate_pct"] = comps["top4_rate_pct"].astype(float)
 
         filtered_comps = comps
         if comp_search.strip():
             filtered_comps = filtered_comps[
-                filtered_comps["Clean Board"].str.contains(comp_search.strip(), case=False, na=False)
+                filtered_comps["comp_name"].str.contains(comp_search.strip(), case=False, na=False, regex=False)
             ]
 
-        display_cols = ["Clean Board", "sample_count", "average_placement", "top4_rate_pct"]
-        col_rename = {
-            "Clean Board": "Final Board Lineup",
-            "sample_count": "Appearances",
-            "average_placement": "Avg Placement",
-            "top4_rate_pct": "Top 4 %",
-        }
-        if show_raw_ids:
-            display_cols.append("comp_units")
-            col_rename["comp_units"] = "Raw Board String"
+        selected = rating_rows(filtered_comps, "comp_name", "comp_id", "Comps")
+        if selected is not None:
+            p_rate = (int(selected['sample_count']) / max(1, matches_cnt)) * 100
+            st.markdown(f"### {selected['comp_name']}")
+            st.markdown(
+                f"<div style='font-size: 0.9rem; color: #94A3B8; margin-bottom: 12px; display: flex; gap: 16px; flex-wrap: wrap;'>"
+                f"<span>Play Rate: <b style='color: #0AC8B9;'>{p_rate:.1f}%</b> ({int(selected['sample_count']):,} games)</span>"
+                f"<span>Avg Placement: <b style='color: #10B981;'>{float(selected['average_placement']):.2f}</b></span>"
+                f"<span>Top 4 Rate: <b style='color: #F8FAFC;'>{float(selected['top4_rate_pct']):.1f}%</b></span>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
 
-        st.dataframe(
-            filtered_comps[display_cols].rename(columns=col_rename),
-            use_container_width=True,
-            hide_index=True,
-            column_config={
-                "Final Board Lineup": st.column_config.TextColumn(
-                    "Final Board (Clean Champions)",
-                    width="large",
-                    help="Clean champion names making up this final board composition.",
-                ),
-                "Appearances": st.column_config.NumberColumn("Appearances", format="%d", width="small"),
-                "Avg Placement": st.column_config.NumberColumn(
-                    "Avg Placement",
-                    help="Lower is better (1.0 = 1st place)",
-                    format="%.2f",
-                    width="small",
-                ),
-                "Top 4 %": st.column_config.ProgressColumn(
-                    "Top 4 Rate",
-                    format="%.1f%%",
-                    min_value=0,
-                    max_value=100,
-                    width="medium",
-                ),
-            },
-        )
+            # Most Common End Board (Visual Lineup with Champion Avatars & Cost Borders)
+            st.markdown("**Most Common End Board**")
+            board_units = selected["most_common_board"] or []
+            st.markdown(
+                f"""
+                <div style="background: #131B2E; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                    {render_board_lineup(board_units, avatar_size=46, show_names=True)}
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            st.caption(
+                f"This lineup appeared in {selected['board_sample_count']} of {selected['sample_count']} "
+                f"comp results ({float(selected['board_share_pct']):.1f}%). Below is its latest recorded match example."
+            )
+
+            # Example Board with Champions, Stars & Equipped Items (MetaTFT Style)
+            st.markdown("**Example Match Itemization**")
+            example_units = selected["example_board"] or []
+            unit_cards_html = []
+            for unit in example_units:
+                u_id = unit.get("character_id") or unit.get("name", "")
+                name = clean_unit_name(u_id)
+                stars = unit.get("tier", 1)
+                cost = get_unit_cost(u_id)
+                border_color = COST_COLORS.get(cost, "#94A3B8")
+                star_str = "★" * stars
+                u_icon = get_unit_icon(u_id)
+
+                raw_items = unit.get("itemNames") or unit.get("items") or []
+                item_imgs = []
+                for itm in raw_items:
+                    itm_id = str(itm)
+                    itm_icon = get_item_icon(itm_id)
+                    itm_name = clean_item_name(itm_id)
+                    if itm_icon:
+                        item_imgs.append(f'<img src="{itm_icon}" alt="{itm_name}" title="{itm_name}" style="width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2);"/>')
+                items_html = f'<div style="display: flex; gap: 3px; margin-top: 6px; min-height: 24px;">{"".join(item_imgs)}</div>'
+
+                unit_card = f"""
+                <div style="display: flex; flex-direction: column; align-items: center; background: #0B0F19; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 10px 8px; min-width: 80px;">
+                    <span style="color: #F59E0B; font-size: 0.72rem; font-weight: 700; margin-bottom: 2px;">{star_str}</span>
+                    <div style="width: 44px; height: 44px; border-radius: 8px; border: 2.5px solid {border_color}; overflow: hidden; background: #0F172A; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
+                        <img src="{u_icon}" alt="{name}" title="{name} ({cost}-cost)" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'"/>
+                    </div>
+                    <span style="font-size: 0.75rem; color: #F8FAFC; margin-top: 4px; font-weight: 600; text-align: center; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{name}</span>
+                    {items_html}
+                </div>
+                """
+                unit_cards_html.append(unit_card)
+
+            st.markdown(
+                f"""
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; background: #131B2E; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                    {"".join(unit_cards_html)}
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
 st.markdown("<br>", unsafe_allow_html=True)
 st.caption("Insights generated from post-match game data. Values represent associations from final boards, not causal impact.")

@@ -37,6 +37,7 @@ services:
   server:
     image: tft-analyst-app:local
     build: ./extract
+    command: ["python", "-m", "streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.fileWatcherType=poll", "--server.runOnSave=true"]
     ports:
       - "8501:8501"
     volumes:
@@ -54,6 +55,8 @@ services:
     profiles: [manual]
     image: tft-analyst-app:local
     build: ./extract
+    volumes:
+      - ./extract:/app
     command: ["python", "loadData.py", "--db-host", "db"]
     environment:
       POSTGRES_HOST: db

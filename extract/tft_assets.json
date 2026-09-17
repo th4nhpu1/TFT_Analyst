@@ -1,0 +1,694 @@
+{
+  "champions": {
+    "DA_18_Yunara": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_yunara/tft18_yunara_square.png"
+    },
+    "DA_18_ElderDragon": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_elderdragon/hud/tft18_elderdragon_square.png"
+    },
+    "DA_18_Morgana": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_morgana/tft18_morgana_square.png"
+    },
+    "DA_18_Leona": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_leona/tft18_leona_square.png"
+    },
+    "DA_18_Caitlyn": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_caitlyn/tft18_caitlyn_square.png"
+    },
+    "DA_18_Aphelios": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_aphelios/tft18_aphelios_square.png"
+    },
+    "DA_Cinderling18": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_cinderling/tft18_cinderling_square.png"
+    },
+    "DA_18_Tristana": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_tristana/tft18_tristana_square.png"
+    },
+    "DA_18_Lux_Moonbeam": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_lux/tft18_lux_moonbeam_square.png"
+    },
+    "DA_18_Lillia": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_lillia/tft18_lillia_square.png"
+    },
+    "DA_18_MasterYi_AD": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_masteryi/tft18_masteryi_square.png"
+    },
+    "DA_18_GnarSmall": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_gnar/tft18_gnar_square.png"
+    },
+    "DA_18_Alune": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_alune/hud/tft18_alune_square.png"
+    },
+    "DA_18_LeBlanc": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_leblanc/tft18_leblanc_square.png"
+    },
+    "DA_KogMaw18_AD": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_kogmaw/tft18_kogmaw_square.png"
+    },
+    "DA_18_Veigar": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_veigar/tft18_veigar_square.png"
+    },
+    "DA_18_Elise": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_elise/tft18_elise_square.png"
+    },
+    "DA_Sentinel18": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_sentinel/tft18_sentinel_square.png"
+    },
+    "DA_18_Sentry": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_sentry/tft18_sentry_square.png"
+    },
+    "DA_Fiddlesticks18": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_fiddlesticks/tft18_fiddlesticks_square.png"
+    },
+    "DA_Karma18": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_karma/tft18_karma_square.png"
+    },
+    "DA_18_Teemo": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_teemo/tft18_teemo_square.png"
+    },
+    "DA_18_Maokai": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_maokai/tft18_maokai_square.png"
+    },
+    "TFT18_Akali": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_akali/tft18_akali_square.png"
+    },
+    "DA_18_Varus": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_varus/tft18_varus_square.png"
+    },
+    "DA_18_Ivern": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_ivern/hud/tft18_ivern_square.png"
+    },
+    "DA_Lux18_Base": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_lux/tft18_lux_square.png"
+    },
+    "DA_18_Akali_AD": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_akali/tft18_akali_square.png"
+    },
+    "DA_Draven18": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_draven/tft18_draven_square.png"
+    },
+    "DA_18_RekSai": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_reksai/tft18_reksai_square.png"
+    },
+    "DA_18_Warwick": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_warwick/tft18_warwick_square.png"
+    },
+    "DA_CrimsonRaptor18": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_raptor/tft18_crimsonraptor_teamplanner_splash.png"
+    },
+    "DA_Amumu18": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_amumu/tft18_amumu_square.png"
+    },
+    "DA_18_Kobuko": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_kobuko/tft18_kobuko_square.png"
+    },
+    "DA_18_Ornn": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_ornn/tft18_ornn_square.png"
+    },
+    "DA_18_Ezreal": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_ezreal/tft18_ezreal_square.png"
+    },
+    "DA_18_Camille": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_camille/tft18_camille_square.png"
+    },
+    "DA_18_Sivir": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_sivir/tft18_sivir_square.png"
+    },
+    "DA_18_Kayle": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_kayle/tft18_kayle_square.png"
+    },
+    "DA_18_Rakan": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_rakan/tft18_rakan_square.png"
+    },
+    "DA_18_Alistar": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_alistar/tft18_alistar_square.png"
+    },
+    "DA_Brambleback18": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_brambleback/tft18_brambleback_square.png"
+    },
+    "DA_18_Rammus": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_rammus/tft18_rammus_square.png"
+    },
+    "DA_18_Diana": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_diana/tft18_diana_square.png"
+    },
+    "DA_Vi18": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_vi/tft18_vi_square.png"
+    },
+    "DA_18_Xayah": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_xayah/tft18_xayah_square.png"
+    },
+    "DA_Gromp18_AP": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_gromp/tft18_gromp_square.png"
+    },
+    "DA_18_Malphite": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_malphite/tft18_malphite_square.png"
+    },
+    "DA_18_Ahri": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_ahri/tft18_ahri_square.png"
+    },
+    "DA_Krug18": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_krug/tft18_krug_square.png"
+    },
+    "DA_18_Zyra": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_zyra/tft18_zyra_square.png"
+    },
+    "DA_18_Kennen": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_kennen/tft18_kennen_square.png"
+    },
+    "DA_18_Cassiopeia": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_cassiopeia/tft18_cassiopeia_square.png"
+    },
+    "DA_18_Azir": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_azir/tft18_azir_square.png"
+    },
+    "DA_18_Soraka": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_soraka/tft18_soraka_square.png"
+    },
+    "DA_Scuttlecrab18": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_scuttlecrab/tft18_scuttlecrab_square.png"
+    },
+    "DA_Taric18": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_taric/tft18_taric_square.png"
+    },
+    "DA_18_Rengar": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_rengar/tft18_rengar_square.png"
+    },
+    "DA_18_Sejuani": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_sejuani/tft18_sejuani_square.png"
+    },
+    "DA_18_Sett": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_sett/tft18_sett_square.png"
+    },
+    "DA_18_Hecarim": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_hecarim/tft18_hecarim_square.png"
+    },
+    "DA_18_Ashe": {
+      "cost": 5,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_ashe/tft18_ashe_square.png"
+    },
+    "DA_18_Shen": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_shen/tft18_shen_square.png"
+    },
+    "DA_18_Yorick": {
+      "cost": 1,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_yorick/tft18_yorick_square.png"
+    },
+    "DA_Nidalee18_AP": {
+      "cost": 4,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_nidalee/tft18_nidalee_square.png"
+    },
+    "DA_Murkwolf18": {
+      "cost": 2,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_murkwolf/tft18_murkwolf_square.png"
+    },
+    "DA_18_KhaZix": {
+      "cost": 3,
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/characters/tft18_khazix/tft18_khazix_square.png"
+    }
+  },
+  "items": {
+    "DA_Artifact_TitanicHydra": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_titanichydra.png"
+    },
+    "DA_Artifact_RapidFireCannon": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_rapidfirecannon.png"
+    },
+    "DA_JeweledGauntletRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_jeweledgauntletradiant.png"
+    },
+    "DA_BloodthirsterRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_bloodthirsterradiant.png"
+    },
+    "DA_18_EmblemBrawler": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_brawler.png"
+    },
+    "DA_18_EmblemFae": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_fae.png"
+    },
+    "DA_BrambleVest": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_bramblevest.png"
+    },
+    "DA_18_EmblemSlayer": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_ravager.png"
+    },
+    "DA_Quicksilver": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_quicksilver.png"
+    },
+    "DA_Component_NegatronCloak": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_negatroncloak.png"
+    },
+    "DA_Component_RecurveBow": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_recurvebow.png"
+    },
+    "DA_18_EmblemJuggernaut": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_juggernaut.png"
+    },
+    "DA_18_EmblemInvoker": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_invoker.png"
+    },
+    "DA_RedBuff": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_rapidfirecannon.png"
+    },
+    "DA_18_EmblemBlackthorn": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_blackthorn.png"
+    },
+    "DA_Component_BFSword": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_bfsword.png"
+    },
+    "DA_18_EmblemElderwood": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_elderwood.png"
+    },
+    "DA_TitansResolve_Radiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_titansresolveradiant.png"
+    },
+    "DA_GargoyleStoneplate_Radiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_gargoylestoneplateradiant.png"
+    },
+    "DA_StrikersFlail": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_powergauntlet.png"
+    },
+    "DA_CrownguardRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_crownguardradiant.png"
+    },
+    "DA_VoidStaff": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_voidstaff.png"
+    },
+    "DA_RabadonsDeathcap": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_rabadonsdeathcap.png"
+    },
+    "DA_ProtectorsVow": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_frozenheart.png"
+    },
+    "DA_LastWhisper": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_lastwhisper.png"
+    },
+    "DA_18_EmblemSpellweaver": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_spellweaver.png"
+    },
+    "DA_Artifact_NavoriFlickerblade": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_navoriflickerplade.png"
+    },
+    "DA_Artifact_HellfireHatchet": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_hellfirehatchet.png"
+    },
+    "DA_AdaptiveHelm": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_adaptivehelm.png"
+    },
+    "DA_SpiritVisage_Radiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_spiritvisagerr.png"
+    },
+    "DA_InfinityEdge": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_infinityedge.png"
+    },
+    "DA_BrambleVestRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_bramblevestradiant.png"
+    },
+    "DA_SteraksGage": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_steraksgage.png"
+    },
+    "DA_Artifact_InfinityForce": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornninfinityforce.png"
+    },
+    "DA_TitansResolve": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_titansresolve.png"
+    },
+    "DA_18_EmblemHunter": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_hunter.png"
+    },
+    "DA_SpearOfShojinRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_spearofshojinradiant.png"
+    },
+    "DA_BlastPotion18": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/tft18/tft18_blastpotion.png"
+    },
+    "DA_18_EmblemRapidfire": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_rapidfire.png"
+    },
+    "DA_Morellonomicon": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_morellonomicon.png"
+    },
+    "DA_Artifact_BlightingJewel": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_blightingjewel.png"
+    },
+    "DA_SunfireCape_Radiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_sunfirecaperadiant.png"
+    },
+    "DA_TacticiansCrown": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_forceofnature.png"
+    },
+    "DA_Artifact_VoidGauntlet": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft16_artifact_voidgauntlet.png"
+    },
+    "DA_EdgeOfNight": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_guardianangel.png"
+    },
+    "DA_HealthPotion18_Radiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/tft18/tft18_healthpotion.png"
+    },
+    "DA_Artifact_HorizonFocus": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_horizonfocus.png"
+    },
+    "DA_SpiritVisage": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_spiritvisagerr.png"
+    },
+    "DA_GiantSlayer_Radiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_giantslayerradiant.png"
+    },
+    "DA_Component_FryingPan": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_fryingpan.png"
+    },
+    "DA_Deathblade": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_deathblade.png"
+    },
+    "DA_KrakensFury": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_krakenslayer.png"
+    },
+    "DA_WarmogsArmor": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_warmogsarmor.png"
+    },
+    "DA_SpearOfShojin": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_spearofshojin.png"
+    },
+    "DA_StrikersFlailRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_trapclawradiant.png"
+    },
+    "DA_EvenshroudRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_spectralgauntletradiant.png"
+    },
+    "DA_TacticiansCape": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_tacticiansring.png"
+    },
+    "DA_18_EmblemSprykin": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_sprykin.png"
+    },
+    "DA_18_EmblemBlossom": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_blossom.png"
+    },
+    "DA_BlueBuffRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_bluebuffradiant.png"
+    },
+    "DA_Artifact_TheIndomitable": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_theindomitable.png"
+    },
+    "DA_Artifact_LichBane": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/ornn_items/tft_item_artifact_lichbane.png"
+    },
+    "DA_BlueBuff": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_bluebuff.png"
+    },
+    "DA_JeweledGauntlet": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_jeweledgauntlet.png"
+    },
+    "DA_KrakensFury_Radiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_krakenslayerradiant.png"
+    },
+    "DA_ArchangelsStaff": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_archangelsstaff.png"
+    },
+    "DA_Artifact_LightshieldCrest": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_lightshieldcrest.png"
+    },
+    "DA_18_EmblemPrimal": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_primal.png"
+    },
+    "DA_Artifact_Mittens": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_mittens.png"
+    },
+    "DA_WarmogsArmorRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_warmogsarmorradiant.png"
+    },
+    "DA_NashorsToothRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_leviathanradiant.png"
+    },
+    "DA_Artifact_GoldCollector": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornnthecollector.png"
+    },
+    "DA_18_EmblemDefender": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_defender.png"
+    },
+    "DA_NashorsTooth": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_leviathan.png"
+    },
+    "DA_Artifact_SilvermereDawn": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_silvermeredawn.png"
+    },
+    "DA_GuinsoosRagebladeRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_guinsoosragebladeradiant.png"
+    },
+    "DA_DeathbladeRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_deathbladeradiant.png"
+    },
+    "DA_Artifact_Hullcrusher": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/ornn_items/tft9_ornnitem_hullbreaker.png"
+    },
+    "DA_Artifact_MogulsMail": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalemogulsmail.png"
+    },
+    "DA_IonicSpark": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_ionicspark.png"
+    },
+    "DA_Artifact_GamblersBlade": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalegamblersblade.png"
+    },
+    "DA_Artifact_ForbiddenIdol": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_forbiddenidol.png"
+    },
+    "DA_18_EmblemExecutioner": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_executioner.png"
+    },
+    "DA_ProtectorsVowRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_frozenheartradiant.png"
+    },
+    "DA_Component_TearOfTheGoddess": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_tearofthegoddess.png"
+    },
+    "DA_Artifact_StatikkShiv": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_stattikshiv.png"
+    },
+    "DA_Component_Spatula": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_spatula.png"
+    },
+    "DA_Crownguard": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_crownguard.png"
+    },
+    "DA_Artifact_ZhonyasParadox": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornnzhonyasparadox.png"
+    },
+    "DA_Component_ChainVest": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_chainvest.png"
+    },
+    "DA_Artifact_LudensTempest": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_ludenstempest.png"
+    },
+    "DA_SteadfastHeartRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_nightharvesterradiant.png"
+    },
+    "DA_HextechGunblade": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_hextechgunblade.png"
+    },
+    "DA_ThiefsGloves": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_thiefsgloves.png"
+    },
+    "DA_AdaptiveHelm_Radiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_adaptivehelmradiant.png"
+    },
+    "DA_18_EmblemVanguard": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_vanguard.png"
+    },
+    "DA_QuicksilverRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_quicksilverradiant.png"
+    },
+    "DA_HealthPotion18": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/tft18/tft18_healthpotion.png"
+    },
+    "DA_Artifact_SeekersArmguard": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_seekersarmguard.png"
+    },
+    "DA_Artifact_Fishbones": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_fishbones.png"
+    },
+    "DA_Item_Artifact_TalismanOfAscension": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_talismanofascension.png"
+    },
+    "DA_HandOfJusticeRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_handofjusticeradiant.png"
+    },
+    "DA_Component_GiantsBelt": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_giantsbelt.png"
+    },
+    "DA_Artifact_EternalPact": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft16_artifact_eternalpact.png"
+    },
+    "DA_Artifact_Dawncore": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_dawncore.png"
+    },
+    "DA_EdgeOfNightRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_guardianangelradiant.png"
+    },
+    "DA_Component_SparringGloves": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_sparringgloves.png"
+    },
+    "DA_HandOfJustice": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_unstableconcoction.png"
+    },
+    "DA_Bloodthirster": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_bloodthirster.png"
+    },
+    "DA_18_EmblemFloraFatalisAugment": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_florafatalis.png"
+    },
+    "DA_GargoyleStoneplate": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_gargoylestoneplate.png"
+    },
+    "DA_SteraksGageRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_steraksgageradiant.png"
+    },
+    "DA_Evenshroud": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_spectralgauntlet.png"
+    },
+    "DA_18_EmblemInferno": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_inferno.png"
+    },
+    "DA_18_EmblemLunar": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_lunar.png"
+    },
+    "DA_RabadonsDeathcap_Radiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_rabadonsdeathcapradiant.png"
+    },
+    "DA_GiantSlayer": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_madredsbloodrazor.png"
+    },
+    "DA_RedBuffRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_rapidfirecannonradiant.png"
+    },
+    "DA_VoidStaffRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_voidstaffradiant.png"
+    },
+    "DA_Artifact_WitsEnd": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_witsend.png"
+    },
+    "DA_SunfireCape": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_redbuff.png"
+    },
+    "DA_ManaPotion18": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/tft18/tft18_manapotion.png"
+    },
+    "DA_HextechGunbladeRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_hextechgunbladeradiant.png"
+    },
+    "DA_Artifact_AegisOfDawn": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_aegisofdawn.png"
+    },
+    "DA_LastWhisperRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_lastwhisperradiant.png"
+    },
+    "DA_DragonsClaw": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_dragonsclaw.png"
+    },
+    "DA_Artifact_Manazane": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft4_item_ornnmuramana.png"
+    },
+    "DA_18_EmblemCoven": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_coven.png"
+    },
+    "DA_DragonsClawRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_dragonsclawradiant.png"
+    },
+    "DA_ThiefsGlovesRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_thiefsglovesradiant.png"
+    },
+    "DA_InfinityEdgeRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_infinityedgeradiant.png"
+    },
+    "DA_Artifact_AegisOfDusk": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_aegisofdusk.png"
+    },
+    "DA_ArchangelsStaffRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_archangelsstaffradiant.png"
+    },
+    "DA_Component_NeedlesslyLargeRod": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_needlesslylargerod.png"
+    },
+    "DA_SteadfastHeart": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_nightharvester.png"
+    },
+    "DA_GuinsoosRageblade": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_guinsoosrageblade.png"
+    },
+    "DA_18_EmblemFloraFatalis": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_florafatalis.png"
+    },
+    "DA_MorellonomiconRadiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft5_item_morellonomiconradiant.png"
+    },
+    "DA_BlastPotion18_Radiant": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/tft18/tft18_blastpotion.png"
+    },
+    "DA_TacticiansShield": {
+      "icon_url": "https://raw.communitydragon.org/pbe/game/assets/maps/tft/icons/items/hexcore/tft_item_tacticiansscepter.png"
+    }
+  }
+}
